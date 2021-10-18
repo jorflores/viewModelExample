@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.delnortedevs.viewmodelexample.databinding.FragmentBasketBallBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,8 +24,7 @@ class BasketBallFragment : Fragment() {
     private var _binding: FragmentBasketBallBinding? = null
     private val binding get() = _binding!!
 
-    private var scoreTeamA = 0
-    private var scoreTeamB = 0
+    private val viewModel : ScoreViewModel by activityViewModels ()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -36,43 +36,35 @@ class BasketBallFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showScores()
+        viewModel.scoreTeamA.observe(viewLifecycleOwner,{newscore -> binding.teamAScore.text = newscore.toString()   })
+        viewModel.scoreTeamB.observe(viewLifecycleOwner,{newscore -> binding.teamBScore.text = newscore.toString()   })
 
         binding.buttonA1.setOnClickListener {
-            scoreTeamA += 1
-            showScores()
+            viewModel.addScoreA(1)
         }
         binding.buttonA2.setOnClickListener {
-            scoreTeamA += 2
-            showScores()
+            viewModel.addScoreA(2)
         }
-
         binding.buttonA3.setOnClickListener {
-            scoreTeamA += 3
-            showScores()
+            viewModel.addScoreA(3)
         }
         binding.buttonB1.setOnClickListener {
-            scoreTeamB += 1
-            showScores()
+            viewModel.addScoreB(1)
         }
         binding.buttonB2.setOnClickListener {
-            scoreTeamB += 2
-            showScores()
+            viewModel.addScoreB(2)
         }
         binding.buttonB3.setOnClickListener {
-            scoreTeamB += 3
-            showScores()
+            viewModel.addScoreB(3)
         }
         binding.buttonReset.setOnClickListener {
-            scoreTeamA = 0
-            scoreTeamB = 0
-            showScores()
+            viewModel.resetScores()
         }
     }
 
     private fun showScores() {
-        binding.teamAScore.text = scoreTeamA.toString()
-        binding.teamBScore.text = scoreTeamB.toString()
+       binding.teamAScore.text = viewModel.scoreTeamA.toString()
+        binding.teamBScore.text = viewModel.scoreTeamB.toString()
     }
 
     override fun onDestroyView() {
