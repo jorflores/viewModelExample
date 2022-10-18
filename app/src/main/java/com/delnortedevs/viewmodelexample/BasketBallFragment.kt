@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.delnortedevs.viewmodelexample.databinding.FragmentBasketBallBinding
+import kotlinx.coroutines.newSingleThreadContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,8 +38,15 @@ class BasketBallFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.scoreTeamA.observe(viewLifecycleOwner,{newscore -> binding.teamAScore.text = newscore.toString()   })
-        viewModel.scoreTeamB.observe(viewLifecycleOwner,{newscore -> binding.teamBScore.text = newscore.toString()   })
+
+
+        viewModel.scoreTeamA.observe(viewLifecycleOwner){
+            binding.teamAScore.text = it.toString()
+        }
+
+        viewModel.scoreTeamB.observe(viewLifecycleOwner) {
+            binding.teamBScore.text = it.toString()
+        }
 
         binding.buttonA1.setOnClickListener {
             viewModel.addScoreA(1)
